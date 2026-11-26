@@ -5,7 +5,7 @@ import pandas as pd  # For data manipulation
 from flask import Flask, request, jsonify  # For creating the Flask API
 
 # Initialize the Flask application
-rental_price_predictor_api = Flask("SuperKart Sales Revenue Predictor")
+sales_rev_predictor_api = Flask("SuperKart Sales Revenue Predictor")
 
 # Load the trained machine learning model
 model = joblib.load("sales_rev_prediction_model_v1_0.joblib")
@@ -75,17 +75,18 @@ def predict_sales_rev_batch():
     input_data = pd.read_csv(file)
 
     # Make predictions for all properties in the DataFrame (get log_prices)
-    predicted_sale_rev = model.predict(input_data).tolist()
+    predicted_sales_rev = model.predict(input_data).tolist()
 
     # Calculate actual prices
     # predicted_prices = [round(float(np.exp(log_price)), 2) for log_price in predicted_log_prices]
 
     # Create a dictionary of predictions with property IDs as keys
-    property_ids = input_data['id'].tolist()  # Assuming 'id' is the property ID column
-    output_dict = dict(zip(property_ids, predicted_sale_rev))  # Use actual prices
-
+    #property_ids = input_data['id'].tolist()  # Assuming 'id' is the property ID column
+    # The CSV has no ID column, so use the row number as the key
+    output_dict = {i + 1: round(float(v), 2) for i, v in enumerate(predicted_sales_rev)}
+    
     # Return the predictions dictionary as a JSON response
-    return output_dict
+    return jsonify(output_dict)
 
 # Run the Flask application in debug mode if this script is executed directly
 if __name__ == '__main__':
