@@ -18,7 +18,7 @@ Product_Sugar_Content      = st.selectbox("Sugar content in each product", ["Low
 Product_MRP                = st.number_input("Maximum retail price of each product")
 Store_Age_Years            = st.number_input("Store age in years")
 Store_Size                 = st.selectbox("Size of the store depending on sq.", ["High", "Medium", "Small"])
-Store_Location_City_Type   = st.selectbox("Type of city in store is located", , ["Tier 1", "Tier 2", "Tier 3"])
+Store_Location_City_Type   = st.selectbox("Type of city in store is located", ["Tier 1", "Tier 2", "Tier 3"])
 Store_Type                 = st.selectbox("Type of store depending on the products that are being sold", ["Departmental Store", "Food Mart", "Supermarket Type1", "Supermarket Type2", "Supermarket Type3"])
 
 # Convert user input into a DataFrame
@@ -28,7 +28,7 @@ input_data = pd.DataFrame([{
     'Product_Sugar_Content': Product_Sugar_Content,
     'Product_MRP': Product_MRP,
     'Store_Age_Years': Store_Age_Years,
-    'Store_Size': Store_Size
+    'Store_Size': Store_Size,
     'Store_Location_City_Type': Store_Location_City_Type,
     'Store_Type': Store_Type
 }])
@@ -37,8 +37,8 @@ input_data = pd.DataFrame([{
 if st.button("Predict", type="primary"):
     response = requests.post(f"{BACKEND_URL}/v1/revenue", json=input_data.to_dict(orient='records')[0])  # Send data to Flask API
     if response.status_code == 200:
-        prediction = response.json()['Predicted Sales Revenue (in dollars)']
-        st.success(f"Predicted Sales Revenue (in dollars): {prediction}")
+        prediction = response.json()['Predicted Sale Revenue (in dollars)']
+        st.success(f"Predicted Sale Revenue (in dollars): {prediction}")
     else:
         st.error("Unable to connect to the prediction API.")
 
